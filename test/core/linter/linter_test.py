@@ -528,6 +528,32 @@ def test__parallel_runner__apply_unpickles_root_config_once():
     assert ctx[runner._worker_state].root_config is first
 
 
+def test__parallel_runner__apply_reuses_linter(monkeypatch):
+    """A worker builds one linter and reuses it for later files."""
+
+    class TrackingLinter(Linter):
+        created = 0
+
+        def __init__(self, *args, **kwargs):
+            type(self).created += 1
+            super().__init__(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "Linter", TrackingLinter)
+    fname = "test/fixtures/linter/passing.sql"
+    config = FluffConfig(overrides={"dialect": "ansi"})
+    ctx = contextvars.copy_context()
+    ctx.run(runner.ParallelRunner._init_worker, pickle.dumps(config), True)
+    task = (fname, DeferredRenderTask(fname=fname, fix=False))
+
+    assert isinstance(ctx.run(runner.ParallelRunner._apply, task), runner.LintedFile)
+    first = ctx[runner._worker_state].linter
+    assert isinstance(ctx.run(runner.ParallelRunner._apply, task), runner.LintedFile)
+
+    assert first is not None
+    assert ctx[runner._worker_state].linter is first
+    assert TrackingLinter.created == 1
+
+
 def test__parallel_runner__apply_bad_root_config():
     """A root config which can't be unpickled fails the file, not the worker."""
     fname = "test/fixtures/linter/passing.sql"
