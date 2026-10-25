@@ -44,6 +44,8 @@ class _WorkerState(NamedTuple):
     retain_files: bool
     # The root config, unpickled when the worker renders its first file.
     root_config: Optional[FluffConfig] = None
+    # The linter built from that config. Reused for later files in this worker.
+    linter: Optional[Linter] = None
 
 
 # Set in each worker by ParallelRunner._init_worker.
@@ -299,16 +301,19 @@ class ParallelRunner(BaseRunner):
                     # any plugins it loads see that this isn't the main process.
                     assert state.pickled_root_config, "Worker has no root config."
                     root_config = pickle.loads(state.pickled_root_config)
-                    _worker_state.set(state._replace(root_config=root_config))
-                # Worker-side rendering: reconstruct a Linter from the root
-                # config and do render + lint in one step, keeping the full
-                # RenderedFile off the IPC boundary.
-                linter = Linter(config=root_config)
-                # FluffConfig.__getstate__ strips templater_obj to None before
-                # pickling (it's designed for main-process use only). Since we
-                # are deliberately rendering here in the worker, re-instantiate
-                # the templater from the config's templater name.
-                linter.templater = root_config.get_templater()
+                linter = state.linter
+                if linter is None:
+                    # Build these once per worker. Templater initialization can
+                    # be expensive, especially for Jinja with many extensions.
+                    linter = Linter(config=root_config)
+                    # FluffConfig.__getstate__ strips templater_obj to None before
+                    # pickling (it's designed for main-process use only). Since we
+                    # are deliberately rendering here in the worker, re-instantiate
+                    # the templater from the config's templater name.
+                    linter.templater = root_config.get_templater()
+                    _worker_state.set(
+                        state._replace(root_config=root_config, linter=linter)
+                    )
                 rendered = linter.render_file(task.fname, root_config)
                 rule_pack = linter.get_rulepack(config=rendered.config)
                 linted_file = Linter.lint_rendered(rendered, rule_pack, task.fix, None)
