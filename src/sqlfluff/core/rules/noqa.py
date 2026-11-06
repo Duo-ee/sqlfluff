@@ -116,14 +116,20 @@ class IgnoreMask:
                         )
                         # We use a set to do natural deduplication.
                         expanded_rules: set[str] = set()
+                        # Match case-insensitively and independently of the OS.
+                        # ``fnmatch.filter`` normalises case with ``os.path.normcase``,
+                        # which is a no-op on POSIX but case-folding on Windows, so
+                        # ``noqa: disable=ALL`` only expanded there (issue #9005).
+                        case_folded_refs = {
+                            reference.lower(): reference for reference in reference_map
+                        }
                         for r in unexpanded_rules:
                             matched = False
-                            for expanded in (
-                                reference_map[x]
-                                for x in fnmatch.filter(reference_map.keys(), r)
-                            ):
-                                expanded_rules |= expanded
-                                matched = True
+                            pattern = r.lower()
+                            for folded, reference in case_folded_refs.items():
+                                if fnmatch.fnmatchcase(folded, pattern):
+                                    expanded_rules |= reference_map[reference]
+                                    matched = True
 
                             if not matched:
                                 # We were unable to expand the glob.

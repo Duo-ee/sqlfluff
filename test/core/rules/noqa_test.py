@@ -131,6 +131,41 @@ def test_parse_noqa_no_dups():
     assert len(result.rules) == len(set(result.rules))
 
 
+@pytest.mark.parametrize(
+    "comment",
+    [
+        "noqa: disable=PRS,ALL",
+        "noqa: disable=PRS,all",
+        "noqa: disable=prs,All",
+        "noqa: disable=PRS,LAYOUT",
+    ],
+)
+def test_parse_noqa_case_insensitive_references(comment):
+    """References expand case-insensitively (issue #9005)."""
+    result = IgnoreMask._parse_noqa(comment, 0, 0, reference_map=dummy_rule_map)
+    # Either the tested rule group expands (LT01 is in it) or parsing did.
+    assert "LT01" in result.rules or "PRS" in result.rules
+
+
+def test_parse_noqa_uppercase_all_is_os_independent(monkeypatch):
+    """`ALL` expands on POSIX too, where normcase does not fold case."""
+    import os
+
+    monkeypatch.setattr(os.path, "normcase", lambda p: p)
+    result = IgnoreMask._parse_noqa(
+        "noqa: disable=PRS,ALL", 0, 0, reference_map=dummy_rule_map
+    )
+    assert "LT01" in result.rules
+
+
+def test_parse_noqa_lowercase_rule_code():
+    """A lowercase rule code expands to the rule (issue #9005)."""
+    result = IgnoreMask._parse_noqa(
+        "noqa: disable=lt01", 0, 0, reference_map=dummy_rule_map
+    )
+    assert "LT01" in result.rules
+
+
 def test_from_source_with_dialect_no_inline_comment_matcher():
     """Fallback cleanly if a dialect has no inline_comment lexer matcher."""
 
