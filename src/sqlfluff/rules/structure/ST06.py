@@ -130,7 +130,23 @@ class Rule_ST06(BaseRule):
         return False  # pragma: no cover
 
     @staticmethod
-    def _is_row_value_subquery(select: BaseSegment) -> bool:
+    def _is_parenthesized_row(segment: BaseSegment) -> bool:
+        """Recognize a tuple through redundant grouping parentheses."""
+        while segment.is_type("bracketed", "expression"):
+            if segment.is_type("bracketed") and segment.get_child("comma"):
+                return True
+            content = [
+                child
+                for child in segment.segments
+                if child.is_code and not child.is_type("start_bracket", "end_bracket")
+            ]
+            if len(content) != 1:
+                return False
+            segment = content[0]
+        return False
+
+    @classmethod
+    def _is_row_value_subquery(cls, select: BaseSegment) -> bool:
         """Check for a direct positional comparison with a parenthesised tuple."""
         while parent_info := select.get_parent():
             parent, index = parent_info
@@ -152,11 +168,7 @@ class Rule_ST06(BaseRule):
                 preceding.pop()
                 if preceding and preceding[-1].raw_upper == "NOT":
                     preceding.pop()
-                return bool(
-                    preceding
-                    and preceding[-1].is_type("bracketed")
-                    and preceding[-1].get_child("comma")
-                )
+                return bool(preceding and cls._is_parenthesized_row(preceding[-1]))
             if not parent.is_type("bracketed", "with_compound_statement"):
                 return False
             select = parent
