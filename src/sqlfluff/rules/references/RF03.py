@@ -1,6 +1,6 @@
 """Implementation of Rule RF03."""
 
-from collections.abc import Iterator
+from collections.abc import Iterator, Sequence
 from typing import Optional
 
 from sqlfluff.core.dialects.common import (
@@ -248,13 +248,22 @@ class Rule_RF03(BaseRule):
                     and _sees_outer_columns(query.selectables[0].selectable)
                 ):
                     possible_ref_tables += outer_aliases
-                # An unqualified column may also be a standalone alias of an
-                # enclosing query (e.g. `k` in `FROM UNNEST(...) AS k`), which
-                # can't be qualified with the inner table.
+                # Adding an inner qualifier or removing the qualifier of an
+                # outer table function can change which column a reference names.
+                outer_standalone_aliases = self._outer_standalone_aliases(query)
                 if (
-                    self._may_add_qualifiers
-                    and self._outer_standalone_aliases(query)
+                    outer_standalone_aliases
                     and _sees_outer_columns(query.selectables[0].selectable)
+                    and (
+                        self._may_add_qualifiers
+                        or _references_outer_table(
+                            select_info.reference_buffer,
+                            select_info.table_aliases,
+                            [],
+                            query.dialect.name,
+                            outer_standalone_aliases=outer_standalone_aliases,
+                        )
+                    )
                 ):
                     fixable = False
                 if len(possible_ref_tables) > 1:
@@ -476,8 +485,10 @@ def _references_outer_table(
     inner_aliases: list[AliasInfo],
     outer_aliases: list[AliasInfo],
     dialect_name: str,
+    *,
+    outer_standalone_aliases: Sequence[BaseSegment] = (),
 ) -> bool:
-    """Check whether any reference is qualified with a table of an outer query.
+    """Check whether a qualifier names an outer table or standalone alias.
 
     A reference qualified with ``orders`` or ``public.orders`` names the
     ``public.orders`` table. An inner table shadows an outer table with the
@@ -489,6 +500,7 @@ def _references_outer_table(
     """
     inner_names = [_table_names(t, dialect_name) for t in inner_aliases]
     outer_names = [_table_names(t, dialect_name) for t in outer_aliases]
+    outer_names.extend((a.raw_normalized(),) for a in outer_standalone_aliases)
     for ref in references:
         parts = _normalized_parts(ref, dialect_name)
         # The leading parts of a column reference name the table, but it
