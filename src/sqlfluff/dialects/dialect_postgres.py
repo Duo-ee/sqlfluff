@@ -3397,7 +3397,9 @@ class AlterTableActionSegment(BaseSegment):
                     "IDENTITY",
                     Ref("IfExistsGrammar", optional=True),
                 ),
-                Sequence("SET", "STATISTICS", Ref("NumericLiteralSegment")),
+                Sequence(
+                    "SET", "STATISTICS", OneOf(Ref("NumericLiteralSegment"), "DEFAULT")
+                ),
                 Sequence("SET", Ref("RelationOptionsSegment")),
                 # Documentation says you can only provide keys in RESET options, but the
                 # actual grammar lets you pass in values too.
@@ -5784,7 +5786,7 @@ class AlterStatisticsStatementSegment(BaseSegment):
                     ),
                     Sequence(
                         "STATISTICS",
-                        Ref("NumericLiteralSegment"),
+                        OneOf(Ref("NumericLiteralSegment"), "DEFAULT"),
                     ),
                 ),
             ),

@@ -1,0 +1,5 @@
+-- SET STATISTICS DEFAULT was added in PostgreSQL 17.
+-- https://www.postgresql.org/docs/17/sql-altertable.html
+
+ALTER TABLE sample ALTER COLUMN total SET STATISTICS 100;
+ALTER TABLE sample ALTER COLUMN total SET STATISTICS DEFAULT;
