@@ -675,6 +675,17 @@ postgres_dialect.add(
     # https://www.postgresql.org/docs/17/sql-createtable.html
     # https://www.postgresql.org/docs/17/sql-altertable.html
     ColumnStorageModeGrammar=OneOf("PLAIN", "EXTERNAL", "EXTENDED", "MAIN", "DEFAULT"),
+    StatisticsTargetGrammar=OneOf(
+        "DEFAULT",
+        Sequence(
+            Ref("SignedSegmentGrammar", optional=True),
+            RegexParser(
+                r"[0-9]+(?:_[0-9]+)*",
+                LiteralSegment,
+                type="numeric_literal",
+            ),
+        ),
+    ),
     CreateUserMappingGrammar=Sequence("CREATE", "USER", "MAPPING"),
     SessionInformationUserFunctionsGrammar=OneOf(
         "USER", "CURRENT_ROLE", "CURRENT_USER", "SESSION_USER"
@@ -3397,9 +3408,7 @@ class AlterTableActionSegment(BaseSegment):
                     "IDENTITY",
                     Ref("IfExistsGrammar", optional=True),
                 ),
-                Sequence(
-                    "SET", "STATISTICS", OneOf(Ref("NumericLiteralSegment"), "DEFAULT")
-                ),
+                Sequence("SET", "STATISTICS", Ref("StatisticsTargetGrammar")),
                 Sequence("SET", Ref("RelationOptionsSegment")),
                 # Documentation says you can only provide keys in RESET options, but the
                 # actual grammar lets you pass in values too.
@@ -5756,7 +5765,7 @@ class CreateStatisticsStatementSegment(BaseSegment):
 class AlterStatisticsStatementSegment(BaseSegment):
     """Alter Statistics Segment.
 
-    As specified in https://www.postgresql.org/docs/16/sql-alterstatistics.html
+    As specified in https://www.postgresql.org/docs/17/sql-alterstatistics.html
     """
 
     type = "alter_statistics_statement"
@@ -5784,10 +5793,7 @@ class AlterStatisticsStatementSegment(BaseSegment):
                         "SCHEMA",
                         Ref("SchemaReferenceSegment"),
                     ),
-                    Sequence(
-                        "STATISTICS",
-                        OneOf(Ref("NumericLiteralSegment"), "DEFAULT"),
-                    ),
+                    Sequence("STATISTICS", Ref("StatisticsTargetGrammar")),
                 ),
             ),
         ),

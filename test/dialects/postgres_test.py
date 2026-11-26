@@ -175,6 +175,19 @@ def test_greenplum_valid_column_types_parse(raw: str) -> None:
     assert not any(True for _ in parsed.tree.recursive_crawl("unparsable"))
 
 
+@pytest.mark.parametrize(
+    "sql",
+    [
+        "ALTER STATISTICS s SET STATISTICS -1.5;",
+        "ALTER TABLE t ALTER COLUMN c SET STATISTICS 1e2;",
+    ],
+)
+def test_postgres_statistics_target_rejects_noninteger_literals(sql: str) -> None:
+    """Statistics targets accept integer constants or DEFAULT."""
+    parsed = Linter(dialect="postgres").parse_string(sql)
+    assert any(v.rule_code() == "PRS" for v in parsed.violations)
+
+
 def test_priority_keyword_merge() -> None:
     """Test merging on keyword lists works as expected."""
     kw_list_1 = [("A", "not-keyword"), ("B", "non-reserved")]
