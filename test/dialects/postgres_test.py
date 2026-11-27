@@ -286,6 +286,9 @@ def test_get_keywords() -> None:
         ("-1", True),
         ("+10", True),
         ("1_000", True),
+        ("0x10", True),
+        ("+0O_20", True),
+        ("0b1_0000", True),
         ("DEFAULT", True),
         # Postgres rejects anything that isn't an integer (SQLSTATE 42601).
         ("0.5", False),
