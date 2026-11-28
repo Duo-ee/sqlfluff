@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: bf8be41625d86392a4a93b32ab051788045b368bb50f0d22c934a526e13b49a3
+_hash: a8b05474f4e5b4932b04b0f2a0fe3ec5523eade3bad9385e7cdfc0c5d640d0e4
 file:
 - statement:
     access_statement:
@@ -524,4 +524,92 @@ file:
       - access_target:
           role_reference:
             quoted_identifier: '"dev_user"'
+- statement_terminator: ;
+- statement:
+    access_statement:
+      grant_statement:
+      - keyword: GRANT
+      - access_permissions:
+        - keyword: DROP
+        - keyword: SCHEMA
+      - keyword: TO
+      - keyword: ROLE
+      - role_reference:
+          naked_identifier: maintainer
+- statement_terminator: ;
+- statement:
+    access_statement:
+      revoke_statement:
+      - keyword: REVOKE
+      - access_permissions:
+        - keyword: DROP
+        - keyword: SCHEMA
+      - keyword: FROM
+      - keyword: ROLE
+      - role_reference:
+          naked_identifier: maintainer
+- statement_terminator: ;
+- statement:
+    access_statement:
+      grant_statement:
+      - keyword: GRANT
+      - access_permissions:
+        - keyword: ACCESS
+        - keyword: SYSTEM
+        - keyword: TABLE
+        - comma: ','
+        - keyword: CREATE
+        - keyword: OR
+        - keyword: REPLACE
+        - keyword: EXTERNAL
+        - keyword: FUNCTION
+      - keyword: TO
+      - keyword: ROLE
+      - role_reference:
+          quoted_identifier: '"ops"'
+      - comma: ','
+      - role_reference:
+          naked_identifier: auditor
+- statement_terminator: ;
+- statement:
+    access_statement:
+      revoke_statement:
+      - keyword: REVOKE
+      - access_permissions:
+        - keyword: IGNORE
+        - keyword: RLS
+        - comma: ','
+        - keyword: EXPLAIN
+        - keyword: MASKING
+      - keyword: FROM
+      - keyword: ROLE
+      - role_reference:
+          quoted_identifier: '"ops"'
+      - comma: ','
+      - keyword: ROLE
+      - role_reference:
+          naked_identifier: auditor
+- statement_terminator: ;
+- statement:
+    access_statement:
+      grant_statement:
+      - keyword: GRANT
+      - access_permissions:
+        - keyword: ALL
+        - keyword: PRIVILEGES
+      - keyword: TO
+      - keyword: ROLE
+      - role_reference:
+          naked_identifier: maintainer
+- statement_terminator: ;
+- statement:
+    access_statement:
+      revoke_statement:
+      - keyword: REVOKE
+      - access_permissions:
+          keyword: ALL
+      - keyword: FROM
+      - keyword: ROLE
+      - role_reference:
+          naked_identifier: maintainer
 - statement_terminator: ;

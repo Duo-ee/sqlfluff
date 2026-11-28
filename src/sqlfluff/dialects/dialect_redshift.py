@@ -17,6 +17,7 @@ from sqlfluff.core.parser import (
     IdentifierSegment,
     ImplicitIndent,
     Indent,
+    KeywordSegment,
     LiteralKeywordSegment,
     Matchable,
     Nothing,
@@ -3465,6 +3466,46 @@ class ScopedAccessObjectSegment(BaseSegment):
     )
 
 
+class SystemPermissionsSegment(BaseSegment):
+    """Redshift system permissions that can be granted to or revoked from roles."""
+
+    type = "access_permissions"
+    match_grammar = OneOf(
+        Sequence("ALL", Ref.keyword("PRIVILEGES", optional=True)),
+        Delimited(
+            OneOf(
+                Sequence(
+                    OneOf("CREATE", "DROP"), OneOf("ROLE", "SCHEMA", "MODEL", "LIBRARY")
+                ),
+                Sequence(
+                    OneOf("CREATE", "ALTER", "DROP"),
+                    OneOf("USER", "TABLE", "DATASHARE"),
+                ),
+                Sequence("ALTER", "DEFAULT", "PRIVILEGES"),
+                Sequence("ACCESS", OneOf("CATALOG", Sequence("SYSTEM", "TABLE"))),
+                Sequence(
+                    "CREATE",
+                    "OR",
+                    "REPLACE",
+                    OneOf(
+                        "FUNCTION",
+                        Sequence("EXTERNAL", "FUNCTION"),
+                        "PROCEDURE",
+                        "VIEW",
+                    ),
+                ),
+                Sequence("DROP", OneOf("FUNCTION", "PROCEDURE", "VIEW")),
+                Sequence("TRUNCATE", "TABLE"),
+                "VACUUM",
+                "ANALYZE",
+                StringParser("CANCEL", KeywordSegment),
+                Sequence("IGNORE", "RLS"),
+                Sequence("EXPLAIN", OneOf("RLS", "MASKING")),
+            ),
+        ),
+    )
+
+
 class GrantStatementSegment(ansi.GrantStatementSegment):
     """A `GRANT` statement.
 
@@ -3487,7 +3528,7 @@ class GrantStatementSegment(ansi.GrantStatementSegment):
         ),
     )
 
-    match_grammar: Matchable = Sequence(
+    _object_or_role_grant = Sequence(
         "GRANT",
         OneOf(
             Sequence(
@@ -3531,4 +3572,29 @@ class GrantStatementSegment(ansi.GrantStatementSegment):
             ),
             optional=True,
         ),
+    )
+
+    match_grammar: Matchable = OneOf(
+        Sequence(
+            "GRANT",
+            Ref("SystemPermissionsSegment"),
+            "TO",
+            "ROLE",
+            Delimited(Ref("RoleReferenceSegment")),
+        ),
+        _object_or_role_grant,
+    )
+
+
+class RevokeStatementSegment(ansi.RevokeStatementSegment):
+    """Revoke system permissions from roles, or use the inherited object syntax."""
+
+    match_grammar = OneOf(
+        Sequence(
+            "REVOKE",
+            Ref("SystemPermissionsSegment"),
+            "FROM",
+            Delimited(Sequence("ROLE", Ref("RoleReferenceSegment"))),
+        ),
+        ansi.RevokeStatementSegment.match_grammar,
     )
