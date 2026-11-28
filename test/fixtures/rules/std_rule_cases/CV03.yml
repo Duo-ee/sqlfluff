@@ -176,3 +176,284 @@ test_conditional_fail_templated_no_fix:
     rules:
       convention.select_trailing_comma:
         select_clause_trailing_comma: require_multiline_forbid_single_line
+
+test_wildcard_option_pass_wildcard:
+  pass_str: |
+    SELECT * FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_pass_qualified_wildcard:
+  pass_str: |
+    SELECT DISTINCT f.* FROM foo AS f
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_pass_wildcard_except:
+  pass_str: |
+    SELECT * EXCEPT (a) FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_pass_wildcard_replace:
+  pass_str: |
+    SELECT * REPLACE (1 AS a) FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_pass_wildcard_trailing_comment:
+  pass_str: |
+    SELECT * -- Keep this comment.
+    FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_pass_wildcard_existing_comma:
+  pass_str: |
+    SELECT *, FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_scalar:
+  fail_str: |
+    SELECT a FROM foo
+  fix_str: |
+    SELECT a, FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_star_literal:
+  fail_str: |
+    SELECT '*' FROM foo
+  fix_str: |
+    SELECT '*', FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_multiple_targets:
+  fail_str: |
+    SELECT *, f.a FROM foo AS f
+  fix_str: |
+    SELECT *, f.a, FROM foo AS f
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_multiline_wildcard:
+  fail_str: |
+    SELECT
+        *
+    FROM foo
+  fix_str: |
+    SELECT
+        *,
+    FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_multiline_wildcard_modifier:
+  fail_str: |
+    SELECT * EXCEPT (
+        a
+    ) FROM foo
+  fix_str: |
+    SELECT * EXCEPT (
+        a
+    ), FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_nested_scalar:
+  fail_str: |
+    SELECT * FROM (SELECT a FROM foo) AS f
+  fix_str: |
+    SELECT * FROM (SELECT a, FROM foo) AS f
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_forbid:
+  fail_str: |
+    SELECT *, FROM foo
+  fix_str: |
+    SELECT * FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: forbid
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_conditional:
+  fail_str: |
+    SELECT *, FROM foo
+  fix_str: |
+    SELECT * FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require_multiline_forbid_single_line
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_count_star:
+  fail_str: |
+    SELECT COUNT(*) FROM foo
+  fix_str: |
+    SELECT COUNT(*), FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_scalar_subquery:
+  fail_str: |
+    SELECT (SELECT * FROM foo) FROM bar
+  fix_str: |
+    SELECT (SELECT * FROM foo), FROM bar
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_union:
+  fail_str: |
+    SELECT * FROM foo UNION ALL SELECT a FROM bar
+  fix_str: |
+    SELECT * FROM foo UNION ALL SELECT a, FROM bar
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_pass_comma_on_own_line:
+  pass_str: |
+    SELECT *
+    ,
+    FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_pass_templated_wildcard:
+  pass_str: |
+    SELECT {{ '*' }} FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_disabled:
+  fail_str: |
+    SELECT * FROM foo
+  fix_str: |
+    SELECT *, FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+
+test_wildcard_option_pass_multiline_source_single_line_rendered:
+  pass_str: |
+    SELECT {{
+        '*'
+    }} FROM foo
+  configs:
+    core:
+      dialect: bigquery
+      ignore_templated_areas: false
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true
+
+test_wildcard_option_fail_single_line_source_multiline_rendered:
+  fail_str: |
+    SELECT {{ '\n' }}* FROM foo
+  fix_str: |
+    SELECT {{ '\n' }}*, FROM foo
+  configs:
+    core:
+      dialect: bigquery
+    rules:
+      convention.select_trailing_comma:
+        select_clause_trailing_comma: require
+        allow_single_line_wildcard: true

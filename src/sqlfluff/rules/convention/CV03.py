@@ -24,6 +24,12 @@ class Rule_CV03(BaseRule):
        the SELECT keyword through the last target, ignoring trailing comments,
        whitespace and commas when determining whether a clause is multiline.
 
+       Set ``allow_single_line_wildcard`` to ``True`` to allow a single-line
+       SELECT clause with only a wildcard, such as ``SELECT * FROM foo``, to
+       omit a trailing comma when ``select_clause_trailing_comma`` is ``require``.
+       Qualified wildcards and wildcard modifiers are included. Line counting
+       follows the rendered SQL, as described above.
+
     **Anti-pattern**
 
     .. code-block:: sql
@@ -46,7 +52,7 @@ class Rule_CV03(BaseRule):
     name = "convention.select_trailing_comma"
     aliases = ("L038",)
     groups = ("all", "core", "convention")
-    config_keywords = ["select_clause_trailing_comma"]
+    config_keywords = ["select_clause_trailing_comma", "allow_single_line_wildcard"]
     crawl_behaviour = SegmentSeekerCrawler({"select_clause"})
     is_fix_compatible = True
 
@@ -54,6 +60,7 @@ class Rule_CV03(BaseRule):
         """Trailing commas within select clause."""
         # Config type hints
         self.select_clause_trailing_comma: str
+        self.allow_single_line_wildcard: bool
 
         segment = FunctionalContext(context).segment
         children = segment.children()
@@ -62,7 +69,11 @@ class Rule_CV03(BaseRule):
 
         # Resolve the policy per clause without changing the configured mode.
         comma_policy = self.select_clause_trailing_comma
-        if comma_policy == "require_multiline_forbid_single_line":
+        is_single_line = False
+        if (
+            comma_policy == "require_multiline_forbid_single_line"
+            or self.allow_single_line_wildcard
+        ):
             code_segments = segment.raw_segments.select(
                 sp.and_(sp.is_code(), sp.not_(sp.is_type("comma")))
             )
@@ -71,7 +82,9 @@ class Rule_CV03(BaseRule):
             assert last_code.pos_marker
             start_line = first_code.pos_marker.working_line_no
             end_line = last_code.pos_marker.working_loc_after(last_code.raw)[0]
-            comma_policy = "require" if start_line != end_line else "forbid"
+            is_single_line = start_line == end_line
+            if comma_policy == "require_multiline_forbid_single_line":
+                comma_policy = "forbid" if is_single_line else "require"
 
         if comma_policy == "forbid":
             # Is it a comma?
@@ -116,6 +129,10 @@ class Rule_CV03(BaseRule):
                     description="Trailing comma in select statement forbidden",
                 )
         elif comma_policy == "require":
+            if self.allow_single_line_wildcard and is_single_line:
+                targets = children.select(sp.is_type("select_clause_element"))
+                if len(targets) == 1 and targets[0].get_child("wildcard_expression"):
+                    return None
             if not last_content.is_type("comma"):
                 new_comma = SymbolSegment(",", type="comma")
                 return LintResult(

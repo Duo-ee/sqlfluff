@@ -26,6 +26,13 @@ def get_configs_info() -> dict[str, ConfigInfo]:
                 "clauses?"
             ),
         },
+        "allow_single_line_wildcard": {
+            "validation": [True, False],
+            "definition": (
+                "Allow a single-line SELECT clause containing only a wildcard to "
+                "omit a required trailing comma."
+            ),
+        },
         "prefer_count_1": {
             "validation": [True, False],
             "definition": ("Should count(1) be preferred over count(*) and count(0)?"),
