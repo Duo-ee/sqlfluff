@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 797c59758187f686eabaaa295a9e2b392158e11ab37a934556cf024cf468e083
+_hash: be33c854e56cd93cd94c264a1b3b5dbfdf6bcaa9ca03d3fede45787f9021adf0
 file:
 - statement:
     drop_cast_statement:
@@ -53,10 +53,10 @@ file:
     - bracketed:
       - start_bracket: (
       - data_type:
-          data_type_identifier: udt_1
+          naked_identifier: udt_1
       - keyword: AS
       - data_type:
-          data_type_identifier: udt_2
+          naked_identifier: udt_2
       - end_bracket: )
 - statement_terminator: ;
 - statement:
@@ -66,14 +66,14 @@ file:
     - bracketed:
       - start_bracket: (
       - data_type:
-          naked_identifier: sch
-          dot: .
-          data_type_identifier: udt_1
+        - naked_identifier: sch
+        - dot: .
+        - naked_identifier: udt_1
       - keyword: AS
       - data_type:
-          naked_identifier: sch
-          dot: .
-          data_type_identifier: udt_2
+        - naked_identifier: sch
+        - dot: .
+        - naked_identifier: udt_2
       - end_bracket: )
 - statement_terminator: ;
 - statement:

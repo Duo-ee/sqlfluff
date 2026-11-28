@@ -51,6 +51,18 @@ The dialect for `DuckDB <https://duckdb.org/>`_.
 """,
 )
 
+# DuckDB native types and aliases handled by the inherited datatype fallback.
+# https://duckdb.org/docs/stable/sql/data_types/overview
+duckdb_dialect.sets("builtin_types").update(
+    """
+    BIGNUM BITSTRING BLOB DATETIME DOUBLE ENUM GEOMETRY GUID HUGEINT INT1 INT128
+    INT16 INT32 INT64 INTEGRAL LIST LOGICAL LONG NVARCHAR SHORT SIGNED STRING
+    TIME_NS TIMESTAMP_MS TIMESTAMP_NS TIMESTAMP_S TIMESTAMP_US TINYINT TYPE
+    UBIGINT UHUGEINT UINT128 UINT16 UINT32 UINT64 UINT8 UINTEGER USMALLINT
+    UTINYINT VARBINARY VARIANT VARINT
+    """.split()
+)
+
 duckdb_dialect.sets("reserved_keywords").update(
     [
         "DESCRIBE",

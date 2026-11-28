@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 3e295a9545746c6032f24332c300bb9ef61f23c8517deb7283b63e710e9edd96
+_hash: edaffad70872e4c635f7893d9582ec032d75da498eefca4bc25ed68d47930123
 file:
 - statement:
     create_transform_statement:
@@ -11,7 +11,7 @@ file:
     - keyword: TRANSFORM
     - keyword: FOR
     - data_type:
-        data_type_identifier: hstore
+        naked_identifier: hstore
     - keyword: LANGUAGE
     - naked_identifier: plpython3u
     - bracketed:
@@ -51,9 +51,9 @@ file:
     - keyword: TRANSFORM
     - keyword: FOR
     - data_type:
-        naked_identifier: public
-        dot: .
-        data_type_identifier: hstore
+      - naked_identifier: public
+      - dot: .
+      - naked_identifier: hstore
     - keyword: LANGUAGE
     - naked_identifier: plpython3u
     - bracketed:
@@ -95,7 +95,7 @@ file:
     - keyword: TRANSFORM
     - keyword: FOR
     - data_type:
-        data_type_identifier: hstore
+        naked_identifier: hstore
     - keyword: LANGUAGE
     - naked_identifier: plpython3u
     - bracketed:
@@ -114,7 +114,7 @@ file:
     - keyword: TRANSFORM
     - keyword: FOR
     - data_type:
-        data_type_identifier: hstore
+        naked_identifier: hstore
     - keyword: LANGUAGE
     - naked_identifier: plpython3u
     - bracketed:

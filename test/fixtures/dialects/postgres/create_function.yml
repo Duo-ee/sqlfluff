@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 5a2b2b3c8fbead6df9b71b0251fd734f8e3a21d1791166a54e69914e1e386efe
+_hash: 3b35c4689f558f3c294eac49369e2e430ee58f45f02138b84d07665fcbefff6e
 file:
 - statement:
     create_function_statement:
@@ -322,7 +322,7 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: dup_result
+        naked_identifier: dup_result
     - keyword: AS
     - bracketed:
       - start_bracket: (
@@ -347,7 +347,7 @@ file:
           end_bracket: )
     - keyword: RETURNS
     - data_type:
-        data_type_identifier: dup_result
+        naked_identifier: dup_result
     - function_definition:
         keyword: AS
         quoted_literal: "$$ SELECT $1, CAST($1 AS text) || ' is text' $$"
@@ -779,7 +779,7 @@ file:
     - keyword: RETURNS
     - keyword: SETOF
     - data_type:
-        data_type_identifier: data
+        naked_identifier: data
     - function_definition:
       - keyword: STABLE
       - keyword: PARALLEL
@@ -934,9 +934,9 @@ file:
         - end_bracket: )
     - keyword: returns
     - data_type:
-        naked_identifier: storage
-        dot: .
-        data_type_identifier: dimensions
+      - naked_identifier: storage
+      - dot: .
+      - naked_identifier: dimensions
     - function_definition:
       - language_clause:
           keyword: language
@@ -1553,7 +1553,7 @@ file:
                           naked_identifier: _pt
                         casting_operator: '::'
                         data_type:
-                          data_type_identifier: geometry
+                          naked_identifier: geometry
                     end_bracket: )
       - statement_terminator: ;
       - keyword: end

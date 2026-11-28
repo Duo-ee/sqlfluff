@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 444385d39f033801c67e8959aabec5a6401e3e5eb1c6cbfdc6024d72a422a5d1
+_hash: 8c1f435a4d7e65680e1e0fd4fc6aa5c375d3a74b555b12798c70135eb0fd9d70
 file:
 - statement:
     create_type_statement:
@@ -12,7 +12,7 @@ file:
     - keyword: REPLACE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: mood
+        naked_identifier: mood
     - keyword: AS
     - data_type:
         data_type_identifier: ENUM
@@ -31,7 +31,7 @@ file:
     - keyword: REPLACE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: many_things
+        naked_identifier: many_things
     - keyword: AS
     - data_type:
         struct_type:
@@ -55,7 +55,7 @@ file:
     - keyword: REPLACE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: one_thing
+        naked_identifier: one_thing
     - keyword: AS
     - keyword: UNION
     - struct_type_schema:
@@ -77,7 +77,7 @@ file:
     - keyword: REPLACE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: x_index
+        naked_identifier: x_index
     - keyword: AS
     - data_type:
         keyword: integer
@@ -89,9 +89,9 @@ file:
     - keyword: REPLACE
     - keyword: TYPE
     - data_type:
-        naked_identifier: main
-        dot: .
-        data_type_identifier: mytype
+      - naked_identifier: main
+      - dot: .
+      - naked_identifier: mytype
     - keyword: AS
     - data_type:
         keyword: integer
@@ -108,7 +108,7 @@ file:
       - quoted_identifier: '"mytype2"'
     - keyword: AS
     - data_type:
-        naked_identifier: main
-        dot: .
-        data_type_identifier: mytype
+      - naked_identifier: main
+      - dot: .
+      - naked_identifier: mytype
 - statement_terminator: ;

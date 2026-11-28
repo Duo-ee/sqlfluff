@@ -717,3 +717,72 @@ test_fail_ansi_mixed_case_identifiers:
     rules:
       capitalisation.identifiers:
         extended_capitalisation_policy: lower
+
+test_fail_postgres_create_type:
+  fail_str: |
+    CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');
+    CREATE TABLE t (name MOOD);
+  fix_str: |
+    CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');
+    CREATE TABLE t (name mood);
+  configs:
+    core:
+      dialect: postgres
+
+test_fail_postgres_alter_type:
+  fail_str: |
+    ALTER TYPE mood ADD VALUE 'angry';
+    CREATE TABLE t (name MOOD);
+  fix_str: |
+    ALTER TYPE mood ADD VALUE 'angry';
+    CREATE TABLE t (name mood);
+  configs:
+    core:
+      dialect: postgres
+
+test_fail_postgres_user_defined_type_references:
+  fail_str: |
+    CREATE TABLE t (a My_Type[], b public.My_Type, c "My_Type");
+    SELECT a::My_Type, CAST(b AS public.My_Type) FROM t;
+  fix_str: |
+    CREATE TABLE t (a my_type[], b public.my_type, c "My_Type");
+    SELECT a::my_type, CAST(b AS public.my_type) FROM t;
+  configs:
+    core:
+      dialect: postgres
+    rules:
+      capitalisation.identifiers:
+        extended_capitalisation_policy: lower
+
+test_fail_postgres_user_defined_type_upper:
+  fail_str: CREATE TABLE T (A my_type);
+  fix_str: CREATE TABLE T (A MY_TYPE);
+  configs:
+    core:
+      dialect: postgres
+    rules:
+      capitalisation.identifiers:
+        extended_capitalisation_policy: upper
+
+test_pass_postgres_substring_keywords:
+  pass_str: SELECT substring('Thomas' SIMILAR '%"o_a"%' ESCAPE '"');
+  configs:
+    core:
+      dialect: postgres
+    rules:
+      capitalisation.identifiers:
+        extended_capitalisation_policy: lower
+
+test_fail_postgres_escape_type:
+  fail_str: |
+    CREATE TYPE Escape AS ENUM ('a');
+    CREATE TABLE t (a Escape);
+  fix_str: |
+    CREATE TYPE escape AS ENUM ('a');
+    CREATE TABLE t (a escape);
+  configs:
+    core:
+      dialect: postgres
+    rules:
+      capitalisation.identifiers:
+        extended_capitalisation_policy: lower

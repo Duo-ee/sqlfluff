@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: c77c0136329c411640e7579e21a1f7f03ed3ae21b4943ba12ebb02d4b2bfcde7
+_hash: 0d4d6b9866816cd74de27c2b865b48e1524c9b26a1455454fa67315a611a9927
 file:
 - statement:
     create_aggregate_statement:
@@ -21,7 +21,7 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: SFUNC
+            naked_identifier: SFUNC
         - comparison_operator:
             raw_comparison_operator: '='
         - expression:
@@ -29,7 +29,7 @@ file:
               naked_identifier: mysfunc_accum
         - comma: ','
         - data_type:
-            data_type_identifier: STYPE
+            naked_identifier: STYPE
         - comparison_operator:
             raw_comparison_operator: '='
         - expression:
@@ -37,7 +37,7 @@ file:
               naked_identifier: numeric
         - comma: ','
         - data_type:
-            data_type_identifier: COMBINEFUNC
+            naked_identifier: COMBINEFUNC
         - comparison_operator:
             raw_comparison_operator: '='
         - expression:
@@ -45,7 +45,7 @@ file:
               naked_identifier: mycombine_accum
         - comma: ','
         - data_type:
-            data_type_identifier: INITCOND
+            naked_identifier: INITCOND
         - comparison_operator:
             raw_comparison_operator: '='
         - expression:
@@ -68,7 +68,7 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: SFUNC
+            naked_identifier: SFUNC
         - comparison_operator:
             raw_comparison_operator: '='
         - expression:
@@ -76,7 +76,7 @@ file:
               naked_identifier: mysfunc_accum
         - comma: ','
         - data_type:
-            data_type_identifier: STYPE
+            naked_identifier: STYPE
         - comparison_operator:
             raw_comparison_operator: '='
         - data_type:

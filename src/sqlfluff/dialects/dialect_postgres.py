@@ -408,6 +408,24 @@ postgres_dialect.sets("cannot_be_type_keywords").update(
     get_keywords(postgres_keywords, "non-reserved-(cannot-be-function-or-type)")
 )
 
+# Native types handled by the generic datatype branch still follow CP05.
+# https://www.postgresql.org/docs/current/datatype.html
+postgres_dialect.sets("builtin_types").update(
+    """
+    ACLITEM ANYARRAY ANYCOMPATIBLE ANYCOMPATIBLEARRAY ANYCOMPATIBLEMULTIRANGE
+    ANYCOMPATIBLENONARRAY ANYCOMPATIBLERANGE ANYELEMENT ANYENUM ANYMULTIRANGE
+    ANYNONARRAY ANYRANGE CID CSTRING DATEMULTIRANGE EVENT_TRIGGER FDW_HANDLER
+    GTSVECTOR INDEX_AM_HANDLER INT2VECTOR INT4MULTIRANGE INT8MULTIRANGE INTERNAL
+    JSONPATH LANGUAGE_HANDLER NAME NUMMULTIRANGE OID OID8 OIDVECTOR
+    PG_BRIN_BLOOM_SUMMARY PG_BRIN_MINMAX_MULTI_SUMMARY PG_DDL_COMMAND
+    PG_DEPENDENCIES PG_MCV_LIST PG_NDISTINCT PG_NODE_TREE PG_SNAPSHOT RECORD
+    REFCURSOR REGCLASS REGCOLLATION REGCONFIG REGDATABASE REGDICTIONARY
+    REGNAMESPACE REGOPER REGOPERATOR REGPROC REGPROCEDURE REGROLE REGTYPE
+    TABLE_AM_HANDLER TID TRIGGER TSM_HANDLER TSMULTIRANGE TSTZMULTIRANGE
+    TXID_SNAPSHOT UNKNOWN VARBIT VOID XID XID8
+    """.split()
+)
+
 # `SOURCE` and `TARGET` are not PostgreSQL keywords in general, but the
 # `MERGE ... WHEN NOT MATCHED BY {SOURCE,TARGET}` clauses (added in PostgreSQL
 # 17) need them. Register them as unreserved so they remain usable as ordinary
@@ -907,13 +925,30 @@ postgres_dialect.replace(
         # e.g. BETWEEN). Built-in types such as INT/VARCHAR are matched by
         # explicit branches in DatatypeSegment before this fallback is reached,
         # so excluding those keywords here does not affect them. Reserved
-        # keywords are intentionally NOT excluded, because some grammar (e.g. the
-        # `substring(... SIMILAR ... ESCAPE ...)` special form) relies on
-        # matching such words as data-type identifiers. The excluded class is
+        # keywords remain accepted by a permissive fallback for compatibility.
+        # The excluded class is
         # read from the `cannot_be_type_keywords` dialect set so child dialects
         # (e.g. Greenplum) that add their own such keywords are handled too.
         # See issue #6430.
         lambda dialect: OneOf(
+            # User-defined type names follow the identifier casing policy.
+            # Keep the reserved-word fallback below for special function syntax.
+            RegexParser(
+                r"[A-Z_][A-Z0-9_]*",
+                IdentifierSegment,
+                type="naked_identifier",
+                anti_template=r"^("
+                + r"|".join(
+                    sorted(
+                        {"NOT"}
+                        | dialect.sets("builtin_types")
+                        | dialect.sets("cannot_be_type_keywords")
+                        | dialect.sets("reserved_keywords")
+                    )
+                )
+                + r")$",
+                casefold=str.lower,
+            ),
             RegexParser(
                 r"[A-Z_][A-Z0-9_]*",
                 CodeSegment,
@@ -963,6 +998,14 @@ postgres_dialect.replace(
         ),
     ),
     FunctionContentsGrammar=AnyNumberOf(
+        # SQL-standard regular-expression SUBSTRING syntax.
+        Sequence(
+            Ref("ExpressionSegment"),
+            "SIMILAR",
+            Ref("ExpressionSegment"),
+            "ESCAPE",
+            Ref("ExpressionSegment"),
+        ),
         Ref("ExpressionSegment"),
         OptionallyBracketed(Ref("SetExpressionSegment")),
         # A Cast-like function

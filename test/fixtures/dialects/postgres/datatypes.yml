@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 89842fdc15852a1b72da798ec82fdb2dea0f4c65d1ecfddca51c971133b88419
+_hash: 87a9ecabf2f276f38d0af8162d794c160c088cfe4b93d76af813405a8a69891c
 file:
 - statement:
     create_table_statement:
@@ -716,7 +716,7 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: bar
+        naked_identifier: bar
     - keyword: AS
     - keyword: ENUM
     - bracketed:
@@ -737,7 +737,7 @@ file:
         column_definition:
           naked_identifier: a
           data_type:
-            data_type_identifier: bar
+            naked_identifier: bar
         end_bracket: )
 - statement_terminator: ;
 - statement:
@@ -745,9 +745,9 @@ file:
     - keyword: create
     - keyword: type
     - data_type:
-        naked_identifier: public
-        dot: .
-        data_type_identifier: c
+      - naked_identifier: public
+      - dot: .
+      - naked_identifier: c
     - keyword: AS
     - keyword: ENUM
     - bracketed:
@@ -768,9 +768,9 @@ file:
         column_definition:
           naked_identifier: a
           data_type:
-            naked_identifier: public
-            dot: .
-            data_type_identifier: c
+          - naked_identifier: public
+          - dot: .
+          - naked_identifier: c
         end_bracket: )
 - statement_terminator: ;
 - statement:
@@ -790,7 +790,7 @@ file:
       - column_definition:
           naked_identifier: c
           data_type:
-            data_type_identifier: DATETIME
+            naked_identifier: DATETIME
       - end_bracket: )
 - statement_terminator: ;
 - statement:
@@ -804,7 +804,7 @@ file:
                 naked_identifier: b
               casting_operator: '::'
               data_type:
-                data_type_identifier: DATETIME
+                naked_identifier: DATETIME
       from_clause:
         keyword: FROM
         from_expression:

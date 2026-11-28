@@ -14,6 +14,9 @@ class Rule_CP05(Rule_CP01):
        This rule is disabled for ClickHouse because its data type names are
        case-sensitive.
 
+       PostgreSQL user-defined type names follow the unquoted identifier
+       policy in CP02. Built-in type names follow this rule.
+
     **Anti-pattern**
 
     In this example, ``int`` and ``unsigned`` are in lower-case whereas

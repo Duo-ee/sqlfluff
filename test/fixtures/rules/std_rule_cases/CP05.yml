@@ -232,24 +232,18 @@ test_fail_bigquery_struct:
     core:
       dialect: bigquery
 
-test_fail_postgres_create_type:
-  fail_str: |
+test_pass_postgres_create_type:
+  pass_str: |
     CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');
     CREATE TABLE t (name MOOD);
-  fix_str: |
-    CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');
-    CREATE TABLE t (name mood);
   configs:
     core:
       dialect: postgres
 
-test_fail_postgres_alter_type:
-  fail_str: |
+test_pass_postgres_alter_type:
+  pass_str: |
     ALTER TYPE mood ADD VALUE 'angry';
     CREATE TABLE t (name MOOD);
-  fix_str: |
-    ALTER TYPE mood ADD VALUE 'angry';
-    CREATE TABLE t (name mood);
   configs:
     core:
       dialect: postgres
@@ -285,3 +279,45 @@ test_pass_clickhouse_case_sensitive_types_lower_policy:
     rules:
       capitalisation.types:
         extended_capitalisation_policy: lower
+
+test_fail_postgres_builtin_and_user_defined_types:
+  fail_str: |
+    CREATE TABLE t (a integer, b varchar(10), c My_Type[], d public.My_Type);
+  fix_str: |
+    CREATE TABLE t (a INTEGER, b VARCHAR(10), c My_Type[], d public.My_Type);
+  configs:
+    core:
+      dialect: postgres
+    rules:
+      capitalisation.types:
+        extended_capitalisation_policy: upper
+
+test_fail_postgres_builtin_fallback_types:
+  fail_str: CREATE TABLE t (c0 oid, c1 jsonpath, c2 int4multirange, c3 xid, c4 regclass);
+  fix_str: CREATE TABLE t (c0 OID, c1 JSONPATH, c2 INT4MULTIRANGE, c3 XID, c4 REGCLASS);
+  configs:
+    core:
+      dialect: postgres
+    rules:
+      capitalisation.types:
+        extended_capitalisation_policy: upper
+
+test_fail_duckdb_builtin_fallback_types:
+  fail_str: CREATE TABLE t (c0 hugeint, c1 utinyint, c2 blob, c3 variant, c4 timestamp_ns);
+  fix_str: CREATE TABLE t (c0 HUGEINT, c1 UTINYINT, c2 BLOB, c3 VARIANT, c4 TIMESTAMP_NS);
+  configs:
+    core:
+      dialect: duckdb
+    rules:
+      capitalisation.types:
+        extended_capitalisation_policy: upper
+
+test_fail_materialize_builtin_fallback_types:
+  fail_str: CREATE TABLE t (c0 uint2, c1 uint4, c2 uint8, c3 string);
+  fix_str: CREATE TABLE t (c0 UINT2, c1 UINT4, c2 UINT8, c3 STRING);
+  configs:
+    core:
+      dialect: materialize
+    rules:
+      capitalisation.types:
+        extended_capitalisation_policy: upper

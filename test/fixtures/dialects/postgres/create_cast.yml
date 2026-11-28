@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 9e34d987801d78938da48d706596e4179445070e27a9b8e4a6146a28543d4c37
+_hash: 132198cabcf3e9c3b931515d1c67d022e46b7baab6525cb1b9b16d949730f595
 file:
 - statement:
     create_cast_statement:
@@ -187,10 +187,10 @@ file:
     - bracketed:
       - start_bracket: (
       - data_type:
-          data_type_identifier: udt_1
+          naked_identifier: udt_1
       - keyword: AS
       - data_type:
-          data_type_identifier: udt_2
+          naked_identifier: udt_2
       - end_bracket: )
     - keyword: WITH
     - keyword: FUNCTION
@@ -200,10 +200,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: udt_1
+            naked_identifier: udt_1
         - comma: ','
         - data_type:
-            data_type_identifier: udt_2
+            naked_identifier: udt_2
         - end_bracket: )
 - statement_terminator: ;
 - statement:
@@ -213,14 +213,14 @@ file:
     - bracketed:
       - start_bracket: (
       - data_type:
-          naked_identifier: sch
-          dot: .
-          data_type_identifier: udt_1
+        - naked_identifier: sch
+        - dot: .
+        - naked_identifier: udt_1
       - keyword: AS
       - data_type:
-          naked_identifier: sch
-          dot: .
-          data_type_identifier: udt_2
+        - naked_identifier: sch
+        - dot: .
+        - naked_identifier: udt_2
       - end_bracket: )
     - keyword: WITH
     - keyword: FUNCTION
@@ -232,14 +232,14 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            naked_identifier: sch
-            dot: .
-            data_type_identifier: udt_1
+          - naked_identifier: sch
+          - dot: .
+          - naked_identifier: udt_1
         - comma: ','
         - data_type:
-            naked_identifier: sch
-            dot: .
-            data_type_identifier: udt_2
+          - naked_identifier: sch
+          - dot: .
+          - naked_identifier: udt_2
         - end_bracket: )
 - statement_terminator: ;
 - statement:

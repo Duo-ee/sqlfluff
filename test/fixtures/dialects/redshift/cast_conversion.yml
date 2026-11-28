@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 926a4ef4cfeaf9d86cd3f01610698554d82783517b5c4f36eb6a7049d34d8b3d
+_hash: b1dddf0c83b0ade185fc11db8c975d2875e7345885cf8e09f01bda8a544ac4b9
 file:
 - statement:
     select_statement:
@@ -335,9 +335,9 @@ file:
                   - naked_identifier: nspname
                 keyword: as
                 data_type:
-                  naked_identifier: information_schema
-                  dot: .
-                  data_type_identifier: sql_identifier
+                - naked_identifier: information_schema
+                - dot: .
+                - naked_identifier: sql_identifier
                 end_bracket: )
       from_clause:
         keyword: from

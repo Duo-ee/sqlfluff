@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 83624626813f5a9ac5b981a054f749927531caac54b3f71cf1231a08b21b7300
+_hash: fd4d5639fc4fdb168745fbdd6e4f1f87060cf9bbeae343c1f6300d960417f4f4
 file:
 - statement:
     create_source_kafka_statement:
@@ -603,12 +603,12 @@ file:
       - object_reference:
           naked_identifier: field_name
       - data_type:
-          data_type_identifier: field_type
+          naked_identifier: field_type
       - comma: ','
       - object_reference:
           naked_identifier: field_name
       - data_type:
-          data_type_identifier: field_type
+          naked_identifier: field_type
       - end_bracket: )
 - statement_terminator: ;
 - statement:
@@ -643,7 +643,7 @@ file:
       - object_reference:
           naked_identifier: a
       - data_type:
-          data_type_identifier: row_type
+          naked_identifier: row_type
       - comma: ','
       - object_reference:
           naked_identifier: b

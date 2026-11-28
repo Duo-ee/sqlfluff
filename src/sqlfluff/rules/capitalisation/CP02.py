@@ -102,6 +102,9 @@ class Rule_CP02(Rule_CP01):
         "ignore_words_regex",
     ]
     _description_elem = "Unquoted identifiers"
+    # Data type names can contain unquoted identifiers, including user-defined
+    # PostgreSQL types and their schema qualifiers.
+    _exclude_parent_types = ("datetime_type_identifier", "primitive_type")
 
     def _eval(self, context: RuleContext) -> Optional[list[LintResult]]:
         if context.dialect.name == "clickhouse":

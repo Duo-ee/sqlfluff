@@ -3,21 +3,21 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 55424d3d2f60dbbe766b56d061ead664d5f01426d23f7f428fa79c15b45ec8e5
+_hash: e578c6b3d8d21f93a6e8d59533940d0b065c7e9c1a9156009024042532dc76b5
 file:
 - statement:
     create_type_statement:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: foo
+        naked_identifier: foo
 - statement_terminator: ;
 - statement:
     create_type_statement:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: bar
+        naked_identifier: bar
     - keyword: AS
     - keyword: ENUM
     - bracketed:
@@ -29,7 +29,7 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: bar
+        naked_identifier: bar
     - keyword: AS
     - keyword: ENUM
     - bracketed:
@@ -44,7 +44,7 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: foobar
+        naked_identifier: foobar
     - keyword: AS
     - keyword: RANGE
     - bracketed:
@@ -59,7 +59,7 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: barbar
+        naked_identifier: barbar
     - keyword: AS
     - bracketed:
       - start_bracket: (
@@ -77,7 +77,7 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: foofoo
+        naked_identifier: foofoo
     - keyword: AS
     - bracketed:
       - start_bracket: (

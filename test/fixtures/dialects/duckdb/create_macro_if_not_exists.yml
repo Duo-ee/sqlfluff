@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 565507ee63cba34d285c41655ab6e43e37a2ec1ef5245c570d49e3d6e541cdfe
+_hash: 67d8eaf452aaf0aaa2267be8a1e88a5913c6bc1fff6fd98bfbc00f8362df1b1a
 file:
 - statement:
     create_function_statement:
@@ -18,7 +18,7 @@ file:
         bracketed:
           start_bracket: (
           data_type:
-            data_type_identifier: a
+            naked_identifier: a
           end_bracket: )
     - keyword: AS
     - expression:
@@ -42,10 +42,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: a
+            naked_identifier: a
         - comma: ','
         - data_type:
-            data_type_identifier: b
+            naked_identifier: b
         - assignment_operator: :=
         - expression:
             numeric_literal: '5'
@@ -72,7 +72,7 @@ file:
         bracketed:
           start_bracket: (
           data_type:
-            data_type_identifier: a
+            naked_identifier: a
           end_bracket: )
     - keyword: AS
     - expression:
@@ -95,10 +95,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: a
+            naked_identifier: a
         - comma: ','
         - data_type:
-            data_type_identifier: b
+            naked_identifier: b
         - assignment_operator: :=
         - expression:
             numeric_literal: '5'
@@ -150,7 +150,7 @@ file:
         bracketed:
           start_bracket: (
           data_type:
-            data_type_identifier: a
+            naked_identifier: a
           end_bracket: )
     - keyword: AS
     - keyword: TABLE

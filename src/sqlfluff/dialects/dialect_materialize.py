@@ -31,6 +31,8 @@ materialize_dialect = postgres_dialect.copy_as(
     formatted_name="Materialize",
     docstring="The dialect for `Materialize <https://materialize.com/>`_.",
 )
+materialize_dialect.sets("builtin_types").update("STRING UINT2 UINT4 UINT8".split())
+
 materialize_dialect.update_keywords_set_from_multiline_string(
     "unreserved_keywords", materialize_unreserved_keywords
 )

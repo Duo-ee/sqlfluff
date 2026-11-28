@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: 51ad73837eb1f5708e115d03bae6647b31699d4a0dbb160e204a60e2e65935da
+_hash: f62b8366466afd954754bf23dc48aabd7bb942b96a07eefaaae6dd2cd0936ba2
 file:
 - statement:
     create_function_statement:
@@ -15,10 +15,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: a
+            naked_identifier: a
         - comma: ','
         - data_type:
-            data_type_identifier: b
+            naked_identifier: b
         - end_bracket: )
     - keyword: AS
     - expression:
@@ -38,13 +38,13 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: a
+            naked_identifier: a
         - comma: ','
         - data_type:
-            data_type_identifier: b
+            naked_identifier: b
         - comma: ','
         - data_type:
-            data_type_identifier: c
+            naked_identifier: c
         - end_bracket: )
     - keyword: AS
     - expression:
@@ -98,7 +98,7 @@ file:
         bracketed:
           start_bracket: (
           data_type:
-            data_type_identifier: a
+            naked_identifier: a
           end_bracket: )
     - keyword: AS
     - expression:
@@ -156,7 +156,7 @@ file:
         bracketed:
           start_bracket: (
           data_type:
-            data_type_identifier: x
+            naked_identifier: x
           end_bracket: )
     - keyword: AS
     - expression:
@@ -192,10 +192,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: a
+            naked_identifier: a
         - comma: ','
         - data_type:
-            data_type_identifier: b
+            naked_identifier: b
         - assignment_operator: :=
         - expression:
             numeric_literal: '5'
@@ -218,10 +218,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: l
+            naked_identifier: l
         - comma: ','
         - data_type:
-            data_type_identifier: e
+            naked_identifier: e
         - end_bracket: )
     - keyword: AS
     - expression:
@@ -287,10 +287,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: col1_value
+            naked_identifier: col1_value
         - comma: ','
         - data_type:
-            data_type_identifier: col2_value
+            naked_identifier: col2_value
         - end_bracket: )
     - keyword: AS
     - keyword: TABLE
@@ -326,10 +326,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: col1_value
+            naked_identifier: col1_value
         - comma: ','
         - data_type:
-            data_type_identifier: col2_value
+            naked_identifier: col2_value
         - end_bracket: )
     - keyword: AS
     - keyword: TABLE
@@ -382,7 +382,7 @@ file:
         bracketed:
           start_bracket: (
           data_type:
-            data_type_identifier: i
+            naked_identifier: i
           end_bracket: )
     - keyword: AS
     - keyword: TABLE
@@ -436,10 +436,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: col1
+            naked_identifier: col1
         - comma: ','
         - data_type:
-            data_type_identifier: col2
+            naked_identifier: col2
         - end_bracket: )
     - keyword: AS
     - expression:

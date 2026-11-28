@@ -3,14 +3,14 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: fb48356f393f558f980c027b815b5bbb065d7f7bd9fb74ba8ef01b8c9d0bee09
+_hash: 23d514369e204056a5b43636223b8f192b6febebbb1ed50b977a741c306cc1e9
 file:
 - statement:
     create_type_statement:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: mood
+        naked_identifier: mood
     - keyword: AS
     - data_type:
         data_type_identifier: ENUM
@@ -29,7 +29,7 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: many_things
+        naked_identifier: many_things
     - keyword: AS
     - data_type:
         struct_type:
@@ -51,7 +51,7 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: one_thing
+        naked_identifier: one_thing
     - keyword: AS
     - keyword: UNION
     - struct_type_schema:
@@ -71,7 +71,7 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        data_type_identifier: x_index
+        naked_identifier: x_index
     - keyword: AS
     - data_type:
         keyword: integer
@@ -81,9 +81,9 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        naked_identifier: myschema
-        dot: .
-        data_type_identifier: mytype
+      - naked_identifier: myschema
+      - dot: .
+      - naked_identifier: mytype
     - keyword: AS
     - data_type:
         keyword: int
@@ -95,7 +95,7 @@ file:
     - data_type:
         quoted_identifier: '"myschema"'
         dot: .
-        data_type_identifier: mytype2
+        naked_identifier: mytype2
     - keyword: AS
     - data_type:
         keyword: int
@@ -105,12 +105,12 @@ file:
     - keyword: CREATE
     - keyword: TYPE
     - data_type:
-        naked_identifier: myschema
-        dot: .
-        data_type_identifier: mytype3
+      - naked_identifier: myschema
+      - dot: .
+      - naked_identifier: mytype3
     - keyword: AS
     - data_type:
-        naked_identifier: myschema
-        dot: .
-        data_type_identifier: mytype2
+      - naked_identifier: myschema
+      - dot: .
+      - naked_identifier: mytype2
 - statement_terminator: ;

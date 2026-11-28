@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: a8a2e43cdcbb12e0618a09a99662dbbfffa5c655e1e53618499b34d2ff992095
+_hash: 4f5b28f7b32ad453f171676f164034772276674f697b0d90ab6838dcc1590edd
 file:
 - statement:
     create_operator_class_statement:
@@ -16,7 +16,7 @@ file:
     - keyword: FOR
     - keyword: TYPE
     - data_type:
-        data_type_identifier: complex
+        naked_identifier: complex
     - keyword: USING
     - index_access_method:
         naked_identifier: btree
@@ -61,10 +61,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: complex
+            naked_identifier: complex
         - comma: ','
         - data_type:
-            data_type_identifier: complex
+            naked_identifier: complex
         - end_bracket: )
 - statement_terminator: ;
 - statement:
@@ -78,7 +78,7 @@ file:
     - keyword: FOR
     - keyword: TYPE
     - data_type:
-        data_type_identifier: _int4
+        naked_identifier: _int4
     - keyword: USING
     - index_access_method:
         naked_identifier: gist
@@ -124,10 +124,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: _int4
+            naked_identifier: _int4
         - comma: ','
         - data_type:
-            data_type_identifier: query_int
+            naked_identifier: query_int
         - end_bracket: )
     - comma: ','
     - operator_class_item:
@@ -141,7 +141,7 @@ file:
             data_type_identifier: internal
         - comma: ','
         - data_type:
-            data_type_identifier: _int4
+            naked_identifier: _int4
         - comma: ','
         - data_type:
             keyword: smallint
@@ -175,10 +175,10 @@ file:
         bracketed:
         - start_bracket: (
         - data_type:
-            data_type_identifier: _int4
+            naked_identifier: _int4
         - comma: ','
         - data_type:
-            data_type_identifier: _int4
+            naked_identifier: _int4
         - comma: ','
         - data_type:
             data_type_identifier: internal
